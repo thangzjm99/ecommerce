@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\Tag;
 use Illuminate\Http\Request;
-
+use App\Common\NotificationMessage;
 class TagController extends Controller
 {
     /**
@@ -27,18 +27,30 @@ class TagController extends Controller
      */
     public function store(Request $request)
     {
+        $notificationMessage = new NotificationMessage();
         $tag = new Tag();
-        $tag->name = $request->name;
-        
-        if($tag->save()){
+        $checkTagName = Tag::where('name','like',$request->name);
+        if($checkTagName)
+        {
             return response()->json([
-                'data'=>$tag
-            ],201);
-        }else{
-            return response()->json([
-                'message'=>'error'
+                'message' => 'Your tag name was already existed'
             ],500);
-        };
+        }
+        else
+        {
+            $tag->name = $request->name;
+            if($tag->save()){
+                return response()->json([
+                    'data'=>$tag,
+                    'message' => $notificationMessage->getInsertSuccessMessage()
+                ],201);
+            }else{
+                return response()->json([
+                    'message' => $notificationMessage->getInsertFailMessage()
+                ],500);
+            };
+        }
+        
     }
 
     /**
@@ -49,6 +61,7 @@ class TagController extends Controller
      */
     public function show($id)
     {
+
         //
     }
 
@@ -61,16 +74,17 @@ class TagController extends Controller
      */
     public function update(Request $request, Tag $tag)
     {
-        //
+        $notificationMessage = new NotificationMessage();
         $tag->name = $request->name;
 
         if($tag->save()){
             return response()->json([
-                'data'=>$tag
+                'data'=>$tag,
+                'message'=>$notificationMessage->getUpdateSuccessMessage()
             ],201);
         }else{
             return response()->json([
-                'message'=>'error'
+                'message'=>$notificationMessage->getUpdateFailMessage()
             ],500);
         };
         
@@ -84,16 +98,16 @@ class TagController extends Controller
      */
     public function destroy(Tag $tag)
     {
-        //
+        $notificationMessage = new NotificationMessage();
         if($tag->delete())
         {
             return response()->json([
-                'message'   =>  'Category deleted successfully !',
+                'message'   =>  $notificationMessage->getDeleteSuccessMessage()  ,
                 'status_code'   =>  200
             ], 200);
         }else{
             return response()->json([
-                'message'   =>  'Error!',
+                'message'   =>  $notificationMessage->getDeleteFailMessage(),
                 'status_code'   =>  500
             ], 500);   
         }

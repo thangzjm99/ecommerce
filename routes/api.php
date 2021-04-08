@@ -22,3 +22,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::resource('category','CategoryController');
 Route::resource('tag', 'TagController');
 Route::get('search-tag','TagController@search');
+Route::get('search-category','CategoryController@search');
