@@ -33,18 +33,26 @@ class CategoryController extends Controller
     {
         $notificationMessage = new NotificationMessage();
         $category = new Category;
-        $category->name = $request->name;
-
-        if ($category->save()) {
+        $checkCategoryName = Category::where('name', 'like', $request->name);
+        if ($checkCategoryName) {
             return response()->json([
-                'data' => $category,
-                'message' => $notificationMessage->getInsertSuccessMessage()
-            ], 201);
-        } else {
-            return response()->json([
-                'message' => $notificationMessage->getInsertFailMessage()
+                'message' => 'Your category name was already existed'
             ], 500);
-        };
+        } else {
+            $category->name = $request->name;
+
+            if ($category->save()) {
+                return response()->json([
+                    'data' => $category,
+                    'message' => $notificationMessage->getInsertSuccessMessage()
+                ], 201);
+            } else {
+                return response()->json([
+                    'message' => $notificationMessage->getInsertFailMessage()
+                ], 500);
+            };
+        }
+
 
         //
 
@@ -113,10 +121,10 @@ class CategoryController extends Controller
     public function search(Request $request)
     {
         $name = $request->name;
-        $tag = Category::where('name','like','%'.$name.'%')->get();
+        $tag = Category::where('name', 'like', '%' . $name . '%')->get();
         return response()->json([
-            'data'=>$tag,
+            'data' => $tag,
             'message' => 'success'
-        ],200);
+        ], 200);
     }
 }
