@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Models\Image;
+use App\Models\Product;
 use App\Common\NotificationMessage;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
-use function PHPUnit\Framework\isEmpty;
-
-class CategoryController extends Controller
+class ProductController extends Controller
 {
+
 
     /**
      * Display a listing of the resource.
@@ -18,10 +20,13 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $category = Category::all();
+        $product = Product::with('images');
+
         return response()->json([
-            'data' => $category,
+            'data' => $product,
         ], 200);
+
+
         //
     }
 
@@ -34,18 +39,35 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $notificationMessage = new NotificationMessage();
-        $category = new Category();
-        $checkCategoryName = Category::where('name', 'like', $request->name)->exists();
-        if ($checkCategoryName) {
+        $product = new Product();
+        $image1 = new Image();
+        $image2 = new Image();
+        $checkProductName = Product::where('name', 'like', $request->name)->exists();
+        if ($checkProductName) {
             return response()->json([
-                'message' => 'Your category name was already existed'
+                'message' => 'Your product name was already existed'
             ], 500);
         } else {
-            $category->name = $request->name;
+            $product->code = $request->code;
+            $product->name = $request->name;
+            $product->price = $request->price;
+            $product->inventory_quantity = $request->inventory_quantity;
+            $product->description = $request->description;
+            $product->note = $request->note;
+            $product->category_id = $request->category_id;
+            $product->is_active = $request->is_active;
+            $path1 = $request->file('image1')->store('product_image');
+            $path2 = $request->file('image2')->store('product_image');
 
-            if ($category->save()) {
+            if ($product->save()) {
+                $image1->image_name = $path1;
+                $image1->product_id = $product->id;
+                $image1->save();
+                $image2->image_name = $path2;
+                $image2->product_id = $product->id;
+                $image2->save();
                 return response()->json([
-                    'data' => $category,
+                    'data' => $product,
                     'message' => $notificationMessage->getInsertSuccessMessage()
                 ], 201);
             } else {
@@ -78,14 +100,20 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Category $category)
+    public function update(Request $request, Product $product)
     {
         $notificationMessage = new NotificationMessage();
-        $category->name = $request->name;
-
-        if ($category->save()) {
+        $product->code = $request->code;
+        $product->name = $request->name;
+        $product->price = $request->price;
+        $product->inventory_quantity = $request->inventory_quantity;
+        $product->description = $request->description;
+        $product->note = $request->note;
+        $product->category_id = $request->category_id;
+        $product->is_active = $request->is_active;
+        if ($product->save()) {
             return response()->json([
-                'data' => $category,
+                'data' => $product,
                 'message' => $notificationMessage->getUpdateSuccessMessage()
             ], 201);
         } else {
@@ -103,12 +131,12 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Category $category)
+    public function destroy(Product $product)
     {
         $notificationMessage = new NotificationMessage();
-        if ($category->delete()) {
+        if ($product->delete()) {
             return response()->json([
-                'data' => $category,
+                'data' => $product,
                 'message' => $notificationMessage->getDeleteSuccessMessage()
             ], 201);
         } else {
@@ -123,10 +151,23 @@ class CategoryController extends Controller
     public function search(Request $request)
     {
         $name = $request->name;
-        $tag = Category::where('name', 'like', '%' . $name . '%')->get();
+        $tag = Product::where('name', 'like', '%' . $name . '%')->get();
         return response()->json([
             'data' => $tag,
             'message' => 'success'
         ], 200);
+    }
+
+    public function getProductWithImage()
+    {
+        $product = Product::all();
+        $image = Image::all();
+        return response()->json([
+            'data' => [
+                'product' => $product,
+                'image' => $image
+            ]
+
+        ]);
     }
 }

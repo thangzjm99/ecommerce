@@ -2,27 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Models\PaymentMethod;
 use App\Common\NotificationMessage;
+use Faker\Provider\ar_SA\Payment;
 
-use function PHPUnit\Framework\isEmpty;
-
-class CategoryController extends Controller
+class PaymentMethodController extends Controller
 {
-
-    /**
+    //
+     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        $category = Category::all();
+        $paymentMethod = PaymentMethod::all();
         return response()->json([
-            'data' => $category,
-        ], 200);
-        //
+            'data'=>$paymentMethod
+        ],200);
     }
 
     /**
@@ -31,33 +29,33 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    
     public function store(Request $request)
     {
         $notificationMessage = new NotificationMessage();
-        $category = new Category();
-        $checkCategoryName = Category::where('name', 'like', $request->name)->exists();
-        if ($checkCategoryName) {
+        $paymentMethod = new PaymentMethod();
+        $checkPaymentMethodName = PaymentMethod::where('name','like',$request->name);
+        if($checkPaymentMethodName)
+        {
             return response()->json([
-                'message' => 'Your category name was already existed'
-            ], 500);
-        } else {
-            $category->name = $request->name;
-
-            if ($category->save()) {
+                'message' => 'Your tag name was already existed'
+            ],500);
+        }
+        else
+        {
+            $paymentMethod->name = $request->name;
+            if($paymentMethod->save()){
                 return response()->json([
-                    'data' => $category,
+                    'data'=>$paymentMethod,
                     'message' => $notificationMessage->getInsertSuccessMessage()
-                ], 201);
-            } else {
+                ],201);
+            }else{
                 return response()->json([
                     'message' => $notificationMessage->getInsertFailMessage()
-                ], 500);
+                ],500);
             };
         }
-
-
-        //
-
+        
     }
 
     /**
@@ -68,6 +66,7 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
+
         //
     }
 
@@ -78,55 +77,54 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Category $category)
+    public function update(Request $request, PaymentMethod $paymentMethod)
     {
         $notificationMessage = new NotificationMessage();
-        $category->name = $request->name;
+        $paymentMethod->name = $request->name;
 
-        if ($category->save()) {
+        if($paymentMethod->save()){
             return response()->json([
-                'data' => $category,
-                'message' => $notificationMessage->getUpdateSuccessMessage()
-            ], 201);
-        } else {
+                'data'=>$paymentMethod,
+                'message'=>$notificationMessage->getUpdateSuccessMessage()
+            ],201);
+        }else{
             return response()->json([
-                'message' => $notificationMessage->getUpdateFailMessage()
-            ], 500);
-        }
-
-        //
+                'message'=>$notificationMessage->getUpdateFailMessage()
+            ],500);
+        };
+        
     }
 
     /**
      * Remove the specified resource from storage.
-     *
+     *Tag 
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Category $category)
+    public function destroy(PaymentMethod $tag)
     {
         $notificationMessage = new NotificationMessage();
-        if ($category->delete()) {
+        if($tag->delete())
+        {
             return response()->json([
-                'data' => $category,
-                'message' => $notificationMessage->getDeleteSuccessMessage()
-            ], 201);
-        } else {
+                'message'   =>  $notificationMessage->getDeleteSuccessMessage()  ,
+                'status_code'   =>  200
+            ], 200);
+        }else{
             return response()->json([
-                'message' => $notificationMessage->getDeleteFailMessage()
-            ], 500);
+                'message'   =>  $notificationMessage->getDeleteFailMessage(),
+                'status_code'   =>  500
+            ], 500);   
         }
-
-        //
     }
 
     public function search(Request $request)
     {
         $name = $request->name;
-        $tag = Category::where('name', 'like', '%' . $name . '%')->get();
+        $tag = PaymentMethod::where('name','like','%'.$name.'%')->get();
         return response()->json([
-            'data' => $tag,
+            'data'=>$tag,
             'message' => 'success'
-        ], 200);
+        ],200);
     }
 }

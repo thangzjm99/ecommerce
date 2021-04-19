@@ -21,5 +21,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::resource('category','CategoryController');
 Route::resource('tag', 'TagController');
+Route::resource('product','ProductController');
+Route::resource('paymentMethod','CategoryController');
 Route::get('search-tag','TagController@search');
 Route::get('search-category','CategoryController@search');
+Route::get('get-product-with-image','ProductController@getProductWithImage');
