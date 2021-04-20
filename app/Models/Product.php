@@ -11,32 +11,32 @@ class Product extends Model
 
     public function category()
     {
-        $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class);
     }
 
     public function order_details()
     {
-        $this->hasMany(OrderDetail::class);
+        return $this->hasMany(OrderDetail::class);
     }
 
     public function favorites()
     {
-        $this->hasMany(Favorite::class);
+        return $this->hasMany(Favorite::class);
     }
 
     public function comments()
     {
         # code...
-        $this->hasMany(Comment::class);
+        return $this->hasMany(Comment::class);
     }
 
     public function product_tags()
     {
-        $this->hasMany(ProductTag::class);
+        return $this->hasMany(ProductTag::class);
     }
 
     public function images()
     {
-        $this->hasMany(Image::class,'product_id');
+        return $this->hasMany(Image::class);
     }
 }

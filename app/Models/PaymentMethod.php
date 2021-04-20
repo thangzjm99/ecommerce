@@ -11,6 +11,6 @@ class PaymentMethod extends Model
      
     public function orders()
     {
-        $this->hasMany(Order::class);
+        return $this->hasMany(Order::class);
     }
 }

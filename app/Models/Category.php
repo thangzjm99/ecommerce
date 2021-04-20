@@ -10,7 +10,7 @@ class Category extends Model
 
     protected $table = 'categories';
     public function products(){
-        $this->hasMany(Product::class);
+        return $this->hasMany(Product::class);
     }
 
     

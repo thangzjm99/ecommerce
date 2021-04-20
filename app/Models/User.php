@@ -12,18 +12,18 @@ class User extends Model
 
     public function comments()
     {
-        $this->hasMany(Comment::class);
+        return $this->hasMany(Comment::class);
         # code...
     }
 
     public function favorites()
     {
-        $this->hasMany(Favorite::class);
+        return $this->hasMany(Favorite::class);
     }
 
     public function orders()
     {
-        $this->hasMany(Order::class);
+        return $this->hasMany(Order::class);
     }
 
     

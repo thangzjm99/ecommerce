@@ -11,7 +11,7 @@ class Tag extends Model
 
     public function product_tags()
     {
-        $this->hasMany(ProductTag::class);
+        return $this->hasMany(ProductTag::class);
     }
 
     

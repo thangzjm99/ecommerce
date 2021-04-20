@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Image;
 use App\Models\Product;
 use App\Common\NotificationMessage;
+use App\Http\Controllers;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -20,7 +21,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $product = Product::with('images');
+        $product = Product::with('images')->get();
 
         return response()->json([
             'data' => $product,

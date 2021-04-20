@@ -101,10 +101,10 @@ class PaymentMethodController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(PaymentMethod $tag)
+    public function destroy(PaymentMethod $paymentMethod)
     {
         $notificationMessage = new NotificationMessage();
-        if($tag->delete())
+        if($paymentMethod->delete())
         {
             return response()->json([
                 'message'   =>  $notificationMessage->getDeleteSuccessMessage()  ,
@@ -121,9 +121,9 @@ class PaymentMethodController extends Controller
     public function search(Request $request)
     {
         $name = $request->name;
-        $tag = PaymentMethod::where('name','like','%'.$name.'%')->get();
+        $paymentMethod = PaymentMethod::where('name','like','%'.$name.'%')->get();
         return response()->json([
-            'data'=>$tag,
+            'data'=>$paymentMethod,
             'message' => 'success'
         ],200);
     }
