@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Common\NotificationMessage;
 use Mockery\Matcher\Not;
+use Symfony\Component\VarDumper\Cloner\Data;
 
 class UserController extends Controller
 {
@@ -82,7 +83,12 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        $user = User::where('id','like',$id)->get();
+        return response()->json([
+            'data'=>$user,
+            
+        ]);
+
     }
 
     /**

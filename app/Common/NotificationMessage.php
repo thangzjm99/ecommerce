@@ -16,6 +16,10 @@ class NotificationMessage{
 
     private const DELETE_FAIL = 'Delete Fail';
 
+    private const LOGIN_SUCCESS = 'Login Success';
+
+    private const LOGIN_FAIL = 'Login Fail';
+
     public function getInsertSuccessMessage(){
 
         return $this::INSERT_SUCCESS;
@@ -44,6 +48,14 @@ class NotificationMessage{
         return $this::DELETE_FAIL;
     }
 
+    public function getLoginSuccessMessage(){
+
+        return $this::LOGIN_SUCCESS;
+    }
+
+    public function getLoginFailMessage(){
+        return $this::LOGIN_FAIL;
+    }
 
 
 

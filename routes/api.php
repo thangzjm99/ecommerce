@@ -27,3 +27,5 @@ Route::resource('user','UserController');
 Route::get('search-tag','TagController@search');
 Route::get('search-category','CategoryController@search');
 Route::get('get-product-with-image','ProductController@getProductWithImage');
+
+Route::post('login','Client\LoginController@login');
