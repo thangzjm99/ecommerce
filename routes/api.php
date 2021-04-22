@@ -24,8 +24,10 @@ Route::resource('tag', 'TagController');
 Route::resource('product','ProductController');
 Route::resource('paymentMethod','CategoryController');
 Route::resource('user','UserController');
+Route::resource('favorite','FavoriteController');
 Route::get('search-tag','TagController@search');
 Route::get('search-category','CategoryController@search');
 Route::get('get-product-with-image','ProductController@getProductWithImage');
 
 Route::post('login','Client\LoginController@login');
+Route::post('register','Client\LoginController@register');

@@ -28,4 +28,35 @@ class LoginController extends Controller
             ]);
         }
     }
+
+    public function register(Request $request)
+    {
+        $notificationMessage = new NotificationMessage();
+
+        $user = new User();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = bcrypt($request->password);
+        $user->phone = $request->phone;
+        $user->address = $request->address;
+        $checkUserEmail = User::where('email','like',$request->email)->exists();
+        if($checkUserEmail)
+        {
+            return response()->json([
+                'message'=>'User email has already existed'
+            ]);
+        }
+        if($user->save())
+        {
+            return response()->json([
+                'data'=>$user,
+                'message' => $notificationMessage->getInsertSuccessMessage()
+            ],201);
+        }else{
+            return response()->json([
+                'message' => $notificationMessage->getInsertFailMessage()
+            ],500);
+        };
+        
+    }
 }
