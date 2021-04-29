@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Favorite; 
-
+use App\Common\NotificationMessage;
 class FavoriteController extends Controller
 {
     /**
@@ -39,6 +39,17 @@ class FavoriteController extends Controller
     public function store(Request $request)
     {
         //
+        $notificationMessage = new NotificationMessage();
+        $favorite = new Favorite();
+        $favorite->product_id = $request->product_id;
+        $favorite->user_id = $request->user_id;
+        if($favorite->save())
+        {
+            return response()->json([
+                'data'=>$favorite,
+                'message'=>$notificationMessage->getInsertSuccessMessage()
+            ]);
+        }
     }
 
     /**
@@ -81,8 +92,8 @@ class FavoriteController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Favorite $favorite)
     {
-        //
+        
     }
 }
